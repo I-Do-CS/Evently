@@ -1,0 +1,11 @@
+name: Evently
+services:
+  evently.api:
+    container_name: Evently.API
+    build:
+      context: .
+      dockerfile: API/Evently.API/Dockerfile
+    environment:
+      ASPNETCORE_HTTP_PORTS: "5000"
+    ports:
+      - "5000:5000"
