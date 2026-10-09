@@ -1,17 +1,19 @@
+using Evently.API.Extensions;
+using Evently.Modules.Events.API;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddEventsModule(builder.Configuration);
 
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.ApplyMigrations();
 }
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
+EventsModule.MapEndpoints(app);
 
 await app.RunAsync();

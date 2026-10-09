@@ -1,5 +1,9 @@
 <Solution>
-  <Folder Name="/API/">
-    <Project Path="API/Evently.API/Evently.API.csproj" />
-  </Folder>
+    <Folder Name="/API/">
+        <Project Path="API/Evently.API/Evently.API.csproj" />
+    </Folder>
+    <Folder Name="/Modules/" />
+    <Folder Name="/Modules/Events/">
+        <Project Path="Modules/Events/Evently.Modules.Events.API/Evently.Modules.Events.API.csproj" />
+    </Folder>
 </Solution>

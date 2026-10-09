@@ -1,39 +1,49 @@
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+ENV ASPNETCORE_HTTP_PORTS=5000
+ENV ASPNETCORE_HTTPS_PORTS=5001
+EXPOSE 5000
+EXPOSE 5001
+
+USER app
+
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-
 ARG BUILD_CONFIGURATION=Release
-
 WORKDIR /src
 
-# Copy build configuration and project metadata first.
-COPY ["global.json", "."]
-COPY ["Directory.Build.props", "."]
-COPY ["Directory.Packages.props", "."]
+# Copy the API project file first.
 COPY ["API/Evently.API/Evently.API.csproj", "API/Evently.API/"]
 
-# Restore dependencies before copying source code.
-RUN dotnet restore "API/Evently.API/Evently.API.csproj"
+# Add a COPY instruction for every project referenced by the API.
+COPY ["Modules/Events/Evently.Modules.Events.API/Evently.Modules.Events.API.csproj", "Modules/Events/Evently.Modules.Events.API/"]
 
-# Copy the remaining source files.
+COPY [".editorconfig", "./"]
+COPY ["Directory.Build.props", "./"]
+COPY ["Directory.Packages.props", "./"]
+COPY ["global.json", "./"]
+
+# Restore dependencies using a persistent NuGet package cache.
+RUN --mount=type=cache,id=evently-nuget,target=/root/.nuget/packages \
+    dotnet restore "API/Evently.API/Evently.API.csproj"
+
+# Copy application code only after restoring dependencies.
 COPY . .
 
-# Publish the application.
-RUN dotnet publish "API/Evently.API/Evently.API.csproj" \
-    --configuration $BUILD_CONFIGURATION \
-    --output /app/publish \
+# Publish without restoring packages again.
+# Reuse the same cache mount so the restored packages are available.
+RUN --mount=type=cache,id=evently-nuget,target=/root/.nuget/packages \
+    dotnet publish "API/Evently.API/Evently.API.csproj" \
+    -c "$BUILD_CONFIGURATION" \
+    -o /app/publish \
     --no-restore \
     /p:UseAppHost=false
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
-
+FROM base AS final
 WORKDIR /app
-
-ENV ASPNETCORE_HTTP_PORTS=5000
-
-EXPOSE 5000
-
-USER $APP_UID
-
 COPY --from=build /app/publish .
-
 ENTRYPOINT ["dotnet", "Evently.API.dll"]
