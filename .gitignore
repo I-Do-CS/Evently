@@ -483,3 +483,7 @@ $RECYCLE.BIN/
 
 # Docker Compose Overrides
 docker-compose.override.*
+
+# VS and VSCode
+.vs
+.vscode

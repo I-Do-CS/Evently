@@ -4,6 +4,9 @@
     </Folder>
     <Folder Name="/Modules/" />
     <Folder Name="/Modules/Events/">
-        <Project Path="Modules/Events/Evently.Modules.Events.API/Evently.Modules.Events.API.csproj" />
+        <Project Path="Modules/Events/Evently.Modules.Events.Application/Evently.Modules.Events.Application.csproj" />
+        <Project Path="Modules/Events/Evently.Modules.Events.Domain/Evently.Modules.Events.Domain.csproj" />
+        <Project Path="Modules/Events/Evently.Modules.Events.Infrastructure/Evently.Modules.Events.Infrastructure.csproj" />
+        <Project Path="Modules/Events/Evently.Modules.Events.Presentation/Evently.Modules.Events.Presentation.csproj" />
     </Folder>
 </Solution>

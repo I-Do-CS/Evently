@@ -17,7 +17,10 @@ WORKDIR /src
 COPY ["API/Evently.API/Evently.API.csproj", "API/Evently.API/"]
 
 # Add a COPY instruction for every project referenced by the API.
-COPY ["Modules/Events/Evently.Modules.Events.API/Evently.Modules.Events.API.csproj", "Modules/Events/Evently.Modules.Events.API/"]
+COPY ["Modules/Events/Evently.Modules.Events.Application/Evently.Modules.Events.Application.csproj", "Modules/Events/Evently.Modules.Events.Application/"]
+COPY ["Modules/Events/Evently.Modules.Events.Domain/Evently.Modules.Events.Domain.csproj", "Modules/Events/Evently.Modules.Events.Domain/"]
+COPY ["Modules/Events/Evently.Modules.Events.Infrastructure/Evently.Modules.Events.Infrastructure.csproj", "Modules/Events/Evently.Modules.Events.Infrastructure/"]
+COPY ["Modules/Events/Evently.Modules.Events.Presentation/Evently.Modules.Events.Presentation.csproj", "Modules/Events/Evently.Modules.Events.Presentation/"]
 
 COPY [".editorconfig", "./"]
 COPY ["Directory.Build.props", "./"]

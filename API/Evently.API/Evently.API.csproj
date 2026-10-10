@@ -3,8 +3,7 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
     </ItemGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\..\Modules\Events\Evently.Modules.Events.API\Evently.Modules.Events.API.csproj" />
+      <ProjectReference Include="..\..\Modules\Events\Evently.Modules.Events.Infrastructure\Evently.Modules.Events.Infrastructure.csproj" />
     </ItemGroup>
 </Project>

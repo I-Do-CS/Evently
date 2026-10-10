@@ -1,5 +1,5 @@
 using Evently.API.Extensions;
-using Evently.Modules.Events.API;
+using Evently.Modules.Events.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
