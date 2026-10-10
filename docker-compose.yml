@@ -6,11 +6,12 @@ services:
       context: .
       dockerfile: API/Evently.API/Dockerfile
     environment:
-      ASPNETCORE_HTTP_PORTS: "5000"
+      ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "5000:5000"
     depends_on:
-      - evently.database
+      evently.database:
+        condition: service_healthy
 
   evently.database:
     container_name: Evently.Database
@@ -23,6 +24,11 @@ services:
       - "5432:5432"
     volumes:
       - db_volume:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d evently"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
 volumes:
   db_volume:

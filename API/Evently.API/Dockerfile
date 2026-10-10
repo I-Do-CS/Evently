@@ -5,9 +5,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 ENV ASPNETCORE_HTTP_PORTS=5000
-ENV ASPNETCORE_HTTPS_PORTS=5001
 EXPOSE 5000
-EXPOSE 5001
 
 USER app
 
