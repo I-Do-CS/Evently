@@ -1,52 +1,38 @@
 # Evently
 
-**An event-management backend exploring modular monolith architecture.**
+A .NET 10 event API organized as a modular monolith. The Events module owns its domain model, commands and queries, routes, and PostgreSQL persistence. The host wires the module into ASP.NET Core.
 
-`C#` · `.NET 10` · `DDD` · `CQRS` · `PostgreSQL` · `Docker`
+## Run with Docker Compose
 
-Evently is a course-based architectural study focused on explicit module boundaries, domain events and separation of application, domain, infrastructure and presentation responsibilities.
-
-## Events module
-
-- Create and retrieve event use cases with separate command and query handlers.
-- Event domain entity, status and event-created domain event.
-- Module-specific repository, database context, migrations and unit-of-work abstractions.
-- ASP.NET Core endpoint registration and Development OpenAPI.
-- Docker Compose development environment with PostgreSQL and a database health check.
-
-## Architecture
-
-```mermaid
-flowchart TD
-    Host[Evently.API] --> Presentation[Events.Presentation]
-    Host --> Infrastructure[Events.Infrastructure]
-    Presentation --> Application[Events.Application]
-    Application --> Domain[Events.Domain]
-    Infrastructure --> Application
-    Infrastructure --> Domain
-    Infrastructure --> DB[(PostgreSQL)]
-```
-
-[Modules/Events](Modules/Events/) contains the four Events projects. [API/Evently.API](API/Evently.API/) is the host and composition root.
-
-## Getting started
-
-Use the .NET SDK in [global.json](global.json) and Docker Compose.
+From the repository root:
 
 ```bash
-git clone https://github.com/I-Do-CS/Evently.git
-cd Evently
-dotnet restore Evently.slnx
-dotnet build Evently.slnx
+docker compose -p evently up --build
 ```
 
-Review [docker-compose.yml](docker-compose.yml) and application configuration before starting the API and database:
+Compose starts PostgreSQL and waits for its health check before starting the API. The Development host applies migrations and serves the [OpenAPI document](http://localhost:5000/openapi/v1.json).
+
+Create an event:
 
 ```bash
-docker compose config
-docker compose up --build
+curl http://localhost:5000/events \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "title": "Systems meetup",
+    "description": "Short talks and demos",
+    "location": "Tehran",
+    "startsAtUtc": "2030-06-01T17:00:00Z",
+    "endsAtUtc": "2030-06-01T19:00:00Z"
+  }'
 ```
 
-Compose maps the API to port 5000. Development startup maps OpenAPI and applies migrations. Inspect the Events presentation endpoints for request contracts.
+The response contains the event ID. Use it in `GET /events/{id}` to retrieve the event.
 
-Course-based implementation maintained by [Ali Ghelichkhani](https://github.com/I-Do-CS).
+## Follow the Events module
+
+- [Presentation](Modules/Events/Evently.Modules.Events.Presentation/Events/) maps HTTP requests to the module’s commands and queries.
+- [Application](Modules/Events/Evently.Modules.Events.Application/Events/) contains the create and read handlers.
+- [Domain](Modules/Events/Evently.Modules.Events.Domain/Events/) defines the event entity, its status and the event-created domain event.
+- [Infrastructure](Modules/Events/Evently.Modules.Events.Infrastructure/) registers the module and owns its database context and migrations.
+
+Course project in modular backend architecture.
